@@ -1,28 +1,73 @@
 const imgUrl = "https://dog.ceo/api/breeds/image/random/4"
 const breedUrl = 'https://dog.ceo/api/breeds/list/all'
+const container = document.querySelector('div')
+const ulContainer = document.querySelector('#dog-breeds')
+const dropDown = document.querySelector('#breed-dropdown')
 
-let getDogs = fetch(imgUrl)
+ulContainer.addEventListener('click', handleClick)
+dropDown.addEventListener('change', handleChange)
+
+function getImages(){
+fetch(imgUrl)
 .then(resp => resp.json())
-.then(data => data.message.forEach(url => putOnPage(url)))
+.then(images => {
+    const imgs = images.message
+    let imgArray = createImgElement(imgs)
+    renderImg(imgArray)
+    
+})}
 
-let getBreeds = fetch(breedUrl)
-.then(resp => resp.json())
-.then(data => console.log(data))
+function getBreed(){
+    fetch(breedUrl)
+    .then(resp => resp.json())
+    .then(breed => {
+        const breedsArray = Object.keys(breed.message)
+        const breedLis = createLiElement(breedsArray)
+        renderLis(breedLis)
+    }
+    )}
 
 
-function putInList(breed){
-    let breedList = document.getElementById('dog-breeds')
-    let newBreed = document.createElement('li')
-    newBreed.innerText = `${breed}`
-    breedList.appendChild(newBreed)
-}
-
-
-function putOnPage(url){
-    let pics = document.querySelector('div')
-    let newDog = document.createElement('li')
-    newDog.innerHTML = `<img src="${url}">`
-    pics.appendChild(newDog)
-
+function createLiElement(breedsArray){
+    return breedsArray.map((breed) => {
+        let li = `<li>${breed}</li>`
+        return li
+    })
     
 }
+
+
+function createImgElement(imgs){
+    return imgs.map((img) =>{
+        let i = `<img src=${img}>`
+        return i
+    })
+}
+
+function renderImg(imgArray){
+    imgArray.forEach(element => {
+        container.innerHTML += element
+    })
+}
+
+function renderLis(breedLis){
+    breedLis.forEach(element => {
+        ulContainer.innerHTML += element
+    })
+}
+
+function handleClick(e){
+    if(e.target.style.color === 'red'){
+    e.target.style.color = 'black'}
+    else{
+        e.target.style.color = 'red'
+    }
+}
+
+function handleChange(e){
+    console.log(e)
+
+}
+
+getImages()
+getBreed()
