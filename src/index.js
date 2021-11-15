@@ -3,6 +3,7 @@ const breedUrl = 'https://dog.ceo/api/breeds/list/all'
 const container = document.querySelector('div')
 const ulContainer = document.querySelector('#dog-breeds')
 const dropDown = document.querySelector('#breed-dropdown')
+let breedsArray = []
 
 ulContainer.addEventListener('click', handleClick)
 dropDown.addEventListener('change', handleChange)
@@ -21,7 +22,7 @@ function getBreed(){
     fetch(breedUrl)
     .then(resp => resp.json())
     .then(breed => {
-        const breedsArray = Object.keys(breed.message)
+        breedsArray = Object.keys(breed.message)
         const breedLis = createLiElement(breedsArray)
         renderLis(breedLis)
     }
@@ -65,7 +66,11 @@ function handleClick(e){
 }
 
 function handleChange(e){
-    console.log(e)
+    const letter = e.target.value
+    const filteredBreeds = breedsArray.filter(breed => breed.startsWith(letter))
+    const filteredBreedsLis = createLiElement(filteredBreeds)
+    ulContainer.innerHTML = ''
+    renderLis(filteredBreedsLis)
 
 }
 
